@@ -1,0 +1,18 @@
+<launch>
+
+  <arg name="node_name"/>
+  <arg name="required"/>
+  <arg name="configuration_name"/>
+  <arg name="verbosity" default="0"/>
+
+  <node pkg="hydra_ros" type="hydra_visualizer_node" name="$(arg node_name)"
+        output="log"
+        required="$(arg required)"
+        args="-alsologtostderr -colorlogtostderr -v=$(arg verbosity)">
+    <rosparam file="$(find spark_master_launch)/config/$(arg configuration_name)/hydra_streaming_visualizer/visualizer_params.yaml"/>
+    <rosparam file="$(find spark_master_launch)/config/$(arg configuration_name)/hydra_streaming_visualizer/places_visualization_config.yaml"/>
+    <rosparam file="$(find spark_master_launch)/config/$(arg configuration_name)/hydra_streaming_visualizer/reconstruction_visualization_config.yaml"/>
+
+  </node>
+
+</launch>

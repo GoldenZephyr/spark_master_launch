@@ -1,0 +1,13 @@
+<launch>
+
+    <arg name="configuration_name"/>
+
+    <node pkg="nodelet"
+          type="nodelet"
+          name="nodelet_manager"
+          args="manager"
+          output="log">
+          <rosparam file="$(find spark_master_launch)/config/$(arg configuration_name)/nodelet_manager/nodelet_manager.yaml"/>
+    </node>
+
+</launch>

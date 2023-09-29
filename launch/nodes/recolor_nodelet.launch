@@ -1,0 +1,15 @@
+<launch>
+
+    <arg name="robot_name" />
+    <arg name="node_name" />
+    <arg name="required" />
+    <arg name="configuration_name" />
+
+    <node pkg="nodelet" type="nodelet" name="$(arg node_name)"
+          args="load semantic_recolor/recolor nodelet_manager --no-bond"
+          output="log"
+          required="$(arg required)">
+        <rosparam file="$(find spark_master_launch/config/$(arg configuration_name)/semantic_recolor/color_config.yaml" ns="colors" />
+    </node>
+
+</launch>

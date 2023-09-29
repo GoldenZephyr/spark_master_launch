@@ -1,0 +1,12 @@
+<launch>
+
+    <arg name="robot_name"/>
+    <arg name="node_name"/>
+    <arg name="required"/>
+    <arg name="configuration_name"/>
+
+    <node pkg="hydra_ros" type="csv_to_tf" name="$(arg node_name)" required="$(arg required)" >
+        <rosparam file="$(find spark_master_launch)/config/$(arg configuration_name)/csv_to_tf/csv_to_tf.yaml" subst_value="true"/>
+    </node>
+
+</launch>

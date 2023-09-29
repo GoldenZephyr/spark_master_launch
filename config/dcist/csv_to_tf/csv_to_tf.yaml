@@ -1,0 +1,3 @@
+parent_frame: "$(arg robot_name)/map"
+child_frame: "$(arg robot_name)/base"
+trajectory_file: ""

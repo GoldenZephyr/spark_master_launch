@@ -1,0 +1,12 @@
+<launch>
+
+    <arg name="node_name" />
+    <arg name="required" />
+
+    <node pkg="nodelet" type="nodelet" name="$(arg node_name)"
+          args="load depth_image_proc/register nodelet_manager --no-bond"
+          output="log"
+          required="$(arg required)">
+    </node>
+
+</launch>

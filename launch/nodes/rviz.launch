@@ -1,0 +1,8 @@
+<launch>
+
+  <arg name="configuration_name" />
+  
+  <node name="rviz" pkg="rviz" type="rviz" output="log"
+        args="-d $(find spark_master_launch)/config/$(arg configuration_name)/rviz/default.rviz">
+  </node>
+</launch>
