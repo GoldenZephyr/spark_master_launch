@@ -27,13 +27,13 @@ reconstruction:
             type: kimera
             sensor_frame: $(arg robot_name)/forward_color_optical_frame
             sensor_filepath: $(find spark_master_launch)/config/dcist/hydra_ros_node/sparkal1/LeftCameraParams.yaml
-        camera_info_topic: $(arg robot_name)/forward/color/camera_info # TODO: move remapping to launch file
+        camera_info_topic: /$(arg robot_name)/forward/color/camera_info # TODO: move remapping to launch file
 
 frontend:
     objects:
         bounding_box_type: RAABB
-        validate_vertices: false
-        use_outdoor_places: true
+    validate_vertices: false
+    use_outdoor_places: true
 
 backend:
     dsg:

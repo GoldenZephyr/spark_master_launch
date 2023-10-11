@@ -34,7 +34,7 @@ pgmo:
     gnc_fix_prev_inliers: true
     verbosity: UPDATE
     solver: LM
-  add_initial_prior: true
+  add_initial_prior: false
   covariance:
     odom: 1.0e-02
     loop_close: 5.0e-02
