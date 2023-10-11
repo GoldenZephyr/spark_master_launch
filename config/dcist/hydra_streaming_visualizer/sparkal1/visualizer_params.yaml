@@ -1,9 +1,9 @@
-visualizer_ns: hydra_dsg_visualizer    
+visualizer_ns: hydra_streaming_visualizer
 load_graph: false
 use_zmq: false
 zmq_url: ""
 dsg_mesh:
-    label_colormap: SEMANTIC_MAP_PATH
+    label_colormap: $(find spark_master_launch)/config/$(arg configuration_name)/hydra_streaming_visualizer/$(arg robot_name)/ade20k_mit.csv
     color_by_label: false
 config:
     color_places_by_distance: false

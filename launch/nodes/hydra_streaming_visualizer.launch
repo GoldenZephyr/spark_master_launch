@@ -11,7 +11,7 @@
         output="$(arg output)"
         required="$(arg required)"
         args="-alsologtostderr -colorlogtostderr -v=$(arg verbosity)">
-    <rosparam file="$(find spark_master_launch)/config/$(arg configuration_name)/hydra_streaming_visualizer/$(arg robot_name)/visualizer_params.yaml"/>
+    <rosparam file="$(find spark_master_launch)/config/$(arg configuration_name)/hydra_streaming_visualizer/$(arg robot_name)/visualizer_params.yaml" subst_value="true"/>
     <rosparam file="$(find spark_master_launch)/config/$(arg configuration_name)/hydra_streaming_visualizer/$(arg robot_name)/places_visualization_config.yaml"/>
     <rosparam file="$(find spark_master_launch)/config/$(arg configuration_name)/hydra_streaming_visualizer/$(arg robot_name)/reconstruction_visualization_config.yaml"/>
     <rosparam file="$(find spark_master_launch)/config/$(arg configuration_name)/hydra_streaming_visualizer/$(arg robot_name)/visualizer.yaml" ns="config"/>
