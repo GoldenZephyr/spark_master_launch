@@ -1,7 +1,7 @@
 <launch>
 
     <arg name="robot_name"/>
-    <arg name="log_directory" default="$(env hydra_log_directory)"/>
+    <arg name="log_directory" default="$(find spark_master_launch)/output)"/>
     <arg name="output" default="screen"/>
 
     <arg name="launch_hydra_ros" default="false"/>
