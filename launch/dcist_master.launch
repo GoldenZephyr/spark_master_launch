@@ -1,21 +1,24 @@
 <launch>
 
-    <arg name="robot_name" default="sparkal1"/>
+    <arg name="robot_name"/>
+    <arg name="log_directory" default="$(env hydra_log_directory)"/>
+    <arg name="output" default="screen"/>
 
     <arg name="launch_hydra_ros" default="false"/>
-    <arg name="launch_static_tfs" default="false">
-    <arg name="launch_robot_gt_pose" default="false">
-    <arg name="launch_rgbd_to_pointcloud" default="false">
-    <arg name="launch_semantic_recolor" default="false">
-    <arg name="launch_visualizer" default="false">
-    <arg name="launch_posegraph_view" default="false">
-    <arg name="launch_scene_graph_logger" default="false">
-    <arg name="launch_nodelet_manager" default="false">
-    <arg name="launch_depth_rectifier_nodelet" default="false">
-    <arg name="launch_recolor_nodelet" default="false">
-    <arg name="launch_rviz" default="false">
+    <arg name="launch_static_tfs" default="false"/>
+    <arg name="launch_robot_gt_pose" default="false"/>
+    <arg name="launch_rgbd_to_pointcloud" default="false"/>
+    <arg name="launch_semantic_recolor" default="false"/>
+    <arg name="launch_visualizer" default="false"/>
+    <arg name="launch_posegraph_view" default="false"/>
+    <arg name="launch_scene_graph_logger" default="false"/>
+    <arg name="launch_nodelet_manager" default="false"/>
+    <arg name="launch_depth_rectifier_nodelet" default="false"/>
+    <arg name="launch_recolor_nodelet" default="false"/>
+    <arg name="launch_rviz" default="false"/>
+    <arg name="start_pose_graph_viewer" default="false"/>
 
-    <arg name="sim_time_required" default="true"/>
+    <arg name="sim_time_required"/>
     <param name="use_sim_time" value="$(arg sim_time_required)"/>
 
     <!-- hydra_ros -->
@@ -27,10 +30,10 @@
         <remap from="frame_registration" to="kimera_vio_ros/kimera_vio_ros_node/register_lcd_frames"/>
         <!-- sensor topic remappings -->
         <remap from="~pointcloud" to="semantic_pointcloud"/>
-        <remap from="~rgb/image_raw" to="$(arg robot_name)/forward/color/image_rect_color"/>
-        <remap from="~rgb/image_raw/compressed" to="$(arg robot_name)/forward/color/image_rect_color/compressed"/>
-        <remap from="~rgb/camera_info" to="/$(arg robot_name)/forward/color/camera_info"/>
-        <remap from="~depth_registered/image_rect" to="$(arg robot_name)/forward/depth/image_rect_raw"/>
+        <remap from="~rgb/image_raw" to="forward/color/image_rect_color"/>
+        <remap from="~rgb/image_raw/compressed" to="forward/color/image_rect_color/compressed"/>
+        <remap from="~rgb/camera_info" to="forward/color/camera_info"/>
+        <remap from="~depth_registered/image_rect" to="forward/depth/image_rect_raw"/>
         <remap from="~semantic/image_raw" to="semantic/image_raw"/>
 
         <include file="$(find spark_master_launch)/launch/nodes/hydra_ros_node.launch">
@@ -38,6 +41,7 @@
             <arg name="node_name" value="hydra_ros_node"/>
             <arg name="required" value="true"/>
             <arg name="configuration_name" value="dcist"/>
+            <arg name="output" value="$(arg output)"/>
         </include>
     </group>
 
@@ -53,67 +57,74 @@
             <arg name="node_name" value="csv_to_tf_node"/>
             <arg name="required" value="true"/>
             <arg name="configuration_name" value="dcist"/>
+            <arg name="output" value="$(arg output)"/>
         </include>
     </group>
 
     <!-- nodelet manager -->
     <group if="$(arg launch_nodelet_manager)">
         <include file="$(find spark_master_launch)/launch/nodes/nodelet_manager.launch">
+            <arg name="robot_name" value="$(arg robot_name)"/>
             <arg name="configuration_name" value="dcist"/>
+            <arg name="output" value="$(arg output)"/>
         </include>
     </group>
 
     <!-- rgbd_to_poincloud -->
     <group if="$(arg launch_rgbd_to_pointcloud)">
-        <remap from="~rgb/camera_info" to="$(arg robot_name)/forward/color/camera_info"/>
-        <remap from="~rgb/image_rect_color" to="$(arg robot_name)/forward/color/image_rect_color"/>
-        <remap from="~depth_registered/image_rect" to="$(arg robot_name)/forward/depth/image_rect_raw"/>
+        <remap from="~rgb/camera_info" to="forward/color/camera_info"/>
+        <remap from="~rgb/image_rect_color" to="forward/color/image_rect_color"/>
+        <remap from="~depth_registered/image_rect" to="forward/depth/image_rect_raw"/>
         <remap from="~depth_registered/points" to="semantic_pointcloud"/>
         <include file="$(find spark_master_launch)/launch/nodes/rgbd_to_pointcloud.launch">
             <arg name="robot_name" value="$(arg robot_name)"/>
             <arg name="node_name" value="cloudify"/>
             <arg name="required" value="true"/>
             <arg name="configuration_name" value="dcist"/>
+            <arg name="output" value="$(arg output)"/>
         </include>
     </group>
 
     <!-- semantic_recolor -->
     <group if="$(arg launch_semantic_recolor)">
-        <remap from="~rgb/image_raw" to="$(arg robot_name)/forward/color/image_raw"/>
-        <remap from="~rgb/image_raw/compressed" to="$(arg robot_name)/forward/color/image_raw/compressed"/>
-        <remap from="~semantic/image_raw" to="$(arg robot_name)/semantic/image_raw"/>
+        <remap from="~rgb/image_raw" to="forward/color/image_raw"/>
+        <remap from="~rgb/image_raw/compressed" to="forward/color/image_raw/compressed"/>
+        <remap from="~semantic/image_raw" to="semantic/image_raw"/>
         <include file="$(find spark_master_launch)/launch/nodes/semantic_recolor.launch">
             <arg name="robot_name" value="$(arg robot_name)"/>
             <arg name="node_name" value="semantic_recolor_node"/>
             <arg name="required" value="true"/>
             <arg name="configuration_name" value="dcist"/>
+            <arg name="output" value="$(arg output)"/>
         </include>
     </group>
 
     <!-- recolor nodelet -->
     <group if="$(arg launch_recolor_nodelet)">
         <!-- NOTE: these remappings are not right -->
-        <remap from="labels/image_raw" to="$(arg prerecorded_topic)"/>
-        <remap from="labels/image_raw/compressed" to="$(arg prerecorded_topic)/compressed"/>
-        <remap from="semantic/image_raw" to="$(arg semantic_topic)"/>
-        <remap from="semantic_color/image_raw" to="$(arg semantic_color_topic)"/>
+        <remap from="~labels/image_raw" to="oneformer/labels/image_raw"/>
+        <remap from="~labels/image_raw/compressed" to="oneformer/labels/image_raw/compressed"/>
+        <remap from="~semantic/image_raw" to="SOME_IMAGE_TOPIC/image_raw"/>
+        <remap from="~semantic_color/image_raw" to="SOME_IMAGE_TOPIC_COLOR/image_raw"/>
 
         <include file="$(find spark_master_launch)/launch/nodes/recolor_nodelet.launch">
             <arg name="robot_name" value="$(arg robot_name)"/>
             <arg name="configuration_name" value="dcist"/>
             <arg name="node_name" value="recolor_nodelet"/>
             <arg name="required" value="true"/>
+            <arg name="output" value="$(arg output)"/>
         </include>
     </group>
 
     <!-- depth rectifier -->
     <group if="$(arg launch_depth_rectifier_nodelet)">
-        <remap from="~rgb/camera_info" to="$(arg robot_name)/forward/color/camera_info"/>
-        <remap from="~depth/image_rect" to="$(arg robot_name)/forward/depth/image_rect_raw"/>
-        <remap from="~depth/camera_info" to="$(arg robot_name)/forward/depth/camera_info"/>
+        <remap from="~rgb/camera_info" to="forward/color/camera_info"/>
+        <remap from="~depth/image_rect" to="forward/depth/image_rect_raw"/>
+        <remap from="~depth/camera_info" to="forward/depth/camera_info"/>
         <include file="$(find spark_master_launch)/launch/nodes/depth_rectifier_nodelet.launch">
             <arg name="node_name" value="depth_rectifier"/>
             <arg name="required" value="true"/>
+            <arg name="output" value="$(arg output)"/>
         </include>
     </group>
 
@@ -122,9 +133,11 @@
         <remap from="~dsg" to="hydra_ros_node/dsg"/>
         <remap from="~dsg_mesh_updates" to="hydra_ros_node/dsg_mesh"/>
         <include file="$(find spark_master_launch)/launch/nodes/hydra_streaming_visualizer.launch">
+            <arg name="robot_name" value="$(arg robot_name)"/>
             <arg name="node_name" value="hydra_streaming_visualizer"/>
             <arg name="required" value="true"/>
             <arg name="configuration_name" value="dcist"/>
+            <arg name="output" value="$(arg output)"/>
         </include>
     </group>
 
@@ -134,7 +147,7 @@
     </group>
     <!-- end rviz normal group -->
 
-    <!-- Pose graph view -->
+    <!-- Pose graph view NOT WORKING-->
     <group if="$(arg launch_posegraph_view)">
         <include file="$(find pose_graph_tools)/launch/posegraph_view.launch"
                  if="$(arg start_pose_graph_viewer)">
@@ -144,10 +157,10 @@
         </include>
     </group>
 
-    <!-- Scene graph logger -->
+    <!-- Scene graph logger NOT WORKING -->
     <group if="$(arg launch_scene_graph_logger)">
         <include file="$(find hydra_ros)/launch/utils/scene_graph_logger.launch">
-            <arg name="output_path" value="$(arg dsg_path)"/>
+            <arg name="output_path" value="$(arg log_directory)"/>
         </include>
     </group>
 

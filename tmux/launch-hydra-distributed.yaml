@@ -1,0 +1,33 @@
+session_name: hydra-distributed
+
+environment:
+  RATE: "1.0"
+  BOW_SKIP_NUM: "1"
+  ALPHA: "0.5"
+  NUM_ROBOTS: "8"
+  SIMULATE_COMM: "false"
+  SENSOR_FRAME: $ROBOT_NAME/foward_color_optical_frame #$ROBOT_NAME/velodyne
+  LABELSPACE: "ade20k_mit" # "phoenix"
+  USE_LIDAR_CLOUD: "false"
+  COMM_PATTERN_PATH: ""
+
+options:
+  default-command: /bin/bash
+
+windows:
+- window_name: hydra-distributed
+  focus: true
+  layout: tiled
+  shell_command_before:
+    - mkdir -p $KIMERA_LOGS/$RUN_NAME/distributed
+    - source $KIMERA_WS/devel/setup.bash
+
+  panes:
+    - roslaunch kimera_distributed kimera_distributed.launch robot_id:=$ROBOT_ID robot_name:=$ROBOT_NAME num_robots:=$NUM_ROBOTS dataset_name:=Jackal bow_skip_num:=$BOW_SKIP_NUM alpha:=$ALPHA
+    - sleep 5; roslaunch kimera_distributed dpgo.launch robot_id:=$ROBOT_ID robot_name:=$ROBOT_NAME num_robots:=$NUM_ROBOTS dataset_name:=Jackal multi_master:=true
+    - sleep 5; roslaunch kimera_distributed remote_topic_manager.launch robot_id:=$ROBOT_ID robot_name:=$ROBOT_NAME enet_port:=$ENET_PORT num_robots:=$NUM_ROBOTS simulate_communication:=$SIMULATE_COMM communication_schedule_file:=$COMM_PATTERN_PATH
+    - sleep 5; roslaunch kimera_core hydra_vio_jackal.launch robot_name:=$ROBOT_NAME robot_id:=$ROBOT_ID need_compressed:=false bow_skip_num:=$BOW_SKIP_NUM use_lidar_external:=false
+    - sleep 5; roslaunch spark_master_launch h_dcist_single_hydra.launch robot_name:=$ROBOT_NAME
+    - sleep 5; source ~/py3_autoabstr/bin/activate; cd $KIMERA_WS/src/autoabstr; ./bin/auto_abstr_server.py server
+
+

@@ -1,8 +1,10 @@
 <launch>
 
+  <arg name="robot_name" />
   <arg name="configuration_name" />
+  <arg name="output"/>
   
-  <node name="rviz" pkg="rviz" type="rviz" output="log"
-        args="-d $(find spark_master_launch)/config/$(arg configuration_name)/rviz/default.rviz">
+  <node name="rviz" pkg="rviz" type="rviz" output="$(arg output)"
+        args="-d $(find spark_master_launch)/config/$(arg configuration_name)/rviz/$(arg robot_name)/default.rviz">
   </node>
 </launch>

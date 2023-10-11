@@ -3,15 +3,16 @@
   <arg name="robot_name"/>
   <arg name="node_name"/>
   <arg name="required"/>
-  <arg name="configuration_name" value="dcist"/>
+  <arg name="configuration_name"/>
+  <arg name="output"/>
 
   <node pkg="nodelet"
         type="nodelet"
         required="$(arg required)"
         name="$(arg node_name)"
         args="load depth_image_proc/point_cloud_xyzrgb nodelet_manager -no-bond"
-        output="log">
-    <rosparam file="$(find spark_master_launch)/config/$(configuration_name)/$(arg robot_name)_rgbd_to_pointcloud.yaml"/>
+        output="$(arg output)">
+    <rosparam file="$(find spark_master_launch)/config/$(arg configuration_name)/rgbd_to_pointcloud/$(arg robot_name)/rgbd_to_pointcloud.yaml"/>
   </node>
 
 </launch>

@@ -1,0 +1,21 @@
+<launch> 
+    <arg name="robot_name" default="sparkal1"/>
+    <include file="$(find spark_master_launch)/launch/dcist_master.launch" ns="$(arg robot_name)">
+            <arg name="log_directory" value="/home/ubuntu/hydra_logs"/>
+            <arg name="sim_time_required" value="false"/>
+
+            <arg name="robot_name" value="sparkal1"/>
+            <arg name="launch_hydra_ros" value="true"/>
+            <arg name="launch_static_tfs" value="false"/>
+            <arg name="launch_robot_gt_pose" value="false"/>
+            <arg name="launch_rgbd_to_pointcloud" value="true"/>
+            <arg name="launch_semantic_recolor" value="true"/>
+            <arg name="launch_visualizer" value="true"/>
+            <arg name="launch_posegraph_view" value="false"/>
+            <arg name="launch_scene_graph_logger" value="false"/>
+            <arg name="launch_nodelet_manager" value="true"/>
+            <arg name="launch_depth_rectifier_nodelet" value="true"/>
+            <arg name="launch_recolor_nodelet" value="false"/>
+            <arg name="launch_rviz" value="false"/>
+    </include>
+</launch> 

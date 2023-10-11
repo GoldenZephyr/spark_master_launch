@@ -1,4 +1,0 @@
-visualizer_ns: hydra_dsg_visualizer    
-load_graph: false
-use_zmq: false
-zmq_url: ""

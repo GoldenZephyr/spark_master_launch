@@ -4,14 +4,15 @@
     <arg name="node_name" />
     <arg name="required" />
     <arg name="configuration_name" />
+    <arg name="output"/>
 
     <node pkg="nodelet" type="nodelet" name="semantic_recolor"
           args="load semantic_recolor/segmentation nodelet_manager --no-bond"
-          output="log"
+          output="$(arg output)"
           required="$(arg required)">
-        <rosparam file="$(find spark_master_launch/config/$(arg configuration_name)/semantic_recolor/segmenter_config.yaml" />
-        <rosparam file="$(find spark_master_launch/config/$(arg configuration_name)/semantic_recolor/color_config.yaml" ns="colors" />
-        <rosparam file="$(find spark_master_launch/config/$(arg configuration_name)/semantic_recolor/semantic_recolor.yaml" subst_value="true"/>
+        <rosparam file="$(find spark_master_launch)/config/$(arg configuration_name)/semantic_recolor/$(arg robot_name)/segmenter_config.yaml" />
+        <rosparam file="$(find spark_master_launch)/config/$(arg configuration_name)/semantic_recolor/$(arg robot_name)/color_config.yaml" ns="colors" />
+        <rosparam file="$(find spark_master_launch)/config/$(arg configuration_name)/semantic_recolor/$(arg robot_name)/semantic_recolor.yaml" subst_value="true"/>
     </node>
 
 </launch>

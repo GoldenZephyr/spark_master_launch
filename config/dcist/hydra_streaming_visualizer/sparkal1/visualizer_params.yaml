@@ -1,0 +1,10 @@
+visualizer_ns: hydra_dsg_visualizer    
+load_graph: false
+use_zmq: false
+zmq_url: ""
+dsg_mesh:
+    label_colormap: SEMANTIC_MAP_PATH
+    color_by_label: false
+config:
+    color_places_by_distance: false
+

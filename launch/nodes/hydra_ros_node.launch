@@ -4,31 +4,35 @@
     <arg name="node_name"/>
     <arg name="required"/>
     <arg name="configuration_name"/>
+    <arg name="output"/>
     <arg name="min_glog_level" default="0"/>
     <arg name="verbosity" default="0"/>
-    <arg name="glog_to_file" default="false"/>
+
+    <arg name="gdb_debug" default="false"/>
+    <arg name="launch_prefix" value="gdb -ex run --args" if="$(arg gdb_debug)"/>
+    <arg name="launch_prefix" value="" unless="$(arg gdb_debug)"/>
+    <arg name="glog_to_file" default="$(eval output == log)"/>
     <arg name="glog_file_args" default="--logtostderr=0 --log_dir=$(find spark_master_launch)/output/dcist/hydra" if="$(arg glog_to_file)"/>
     <arg name="glog_file_args" default="" unless="$(arg glog_to_file)"/>
-    <arg name="ros_output" value="screen" unless="$(arg glog_to_file)"/>
-    <arg name="ros_output" value="log" if="$(arg glog_to_file)"/>
 
     <node pkg="hydra_ros" type="hydra_ros_node"
           name="$(arg node_name)"
           launch-prefix="$(arg launch_prefix)"
           args="--minloglevel=$(arg min_glog_level) -v=$(arg verbosity) $(arg glog_file_args)"
           required="$(arg required)"
-          output="$(arg ros_output)">
+          output="$(arg output)">
         <env name="TERM" value="xterm-256color"/>
 
         <!-- parameter files -->
-        <rosparam file="$(find spark_master_launch)/config/$(arg configuration_name)/hydra_ros_node/ros_pipeline.yaml"/>
-        <rosparam file="$(find spark_master_launch)/config/$(arg configuration_name)/hydra_ros_node/labelspace.yaml"/>
-        <rosparam file="$(find spark_master_launch)/config/$(arg configuration_name)/hydra_ros_node/reconstruction_config.yaml"/>
-        <rosparam file="$(find spark_master_launch)/config/$(arg configuration_name)/hydra_ros_node/frontend_config.yaml" ns="frontend"/>
-        <rosparam file="$(find spark_master_launch)/config/$(arg configuration_name)/hydra_ros_node/backend_config.yaml" ns="backend"/>
-        <rosparam file="$(find spark_master_launch)/config/$(arg configuration_name)/hydra_ros_node/lcd_config.yaml"/>
-        <rosparam file="$(find spark_master_launch)/config/$(arg configuration_name)/hydra_ros_node/ros_params.yaml"/>
+        <rosparam file="$(find spark_master_launch)/config/$(arg configuration_name)/hydra_ros_node/$(arg robot_name)/ros_pipeline.yaml"/>
+        <rosparam file="$(find spark_master_launch)/config/$(arg configuration_name)/hydra_ros_node/$(arg robot_name)/labelspace.yaml"/>
+        <rosparam file="$(find spark_master_launch)/config/$(arg configuration_name)/hydra_ros_node/$(arg robot_name)/reconstruction_config.yaml" ns="reconstruction"/>
+        <rosparam file="$(find spark_master_launch)/config/$(arg configuration_name)/hydra_ros_node/$(arg robot_name)/frontend_config.yaml" ns="frontend"/>
+        <rosparam file="$(find spark_master_launch)/config/$(arg configuration_name)/hydra_ros_node/$(arg robot_name)/backend_config.yaml" ns="backend"/>
+        <rosparam file="$(find spark_master_launch)/config/$(arg configuration_name)/hydra_ros_node/$(arg robot_name)/lcd_config.yaml"/>
+        <rosparam file="$(find spark_master_launch)/config/$(arg configuration_name)/hydra_ros_node/$(arg robot_name)/ros_params.yaml"/>
 
-        <rosparam file="$(find spark_master_launch)/config/$(arg configuration_name)/hydra_ros_node/launch_params.yaml" subst_value="true"/>
+        <rosparam file="$(find spark_master_launch)/config/$(arg configuration_name)/hydra_ros_node/$(arg robot_name)/launch_params.yaml" subst_value="true"/>
+    </node>
 
 </launch>

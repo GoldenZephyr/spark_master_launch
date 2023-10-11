@@ -1,17 +1,25 @@
 <launch>
 
+  <arg name="robot_name"/>
   <arg name="node_name"/>
   <arg name="required"/>
   <arg name="configuration_name"/>
+  <arg name="output"/>
   <arg name="verbosity" default="0"/>
 
   <node pkg="hydra_ros" type="hydra_visualizer_node" name="$(arg node_name)"
-        output="log"
+        output="$(arg output)"
         required="$(arg required)"
         args="-alsologtostderr -colorlogtostderr -v=$(arg verbosity)">
-    <rosparam file="$(find spark_master_launch)/config/$(arg configuration_name)/hydra_streaming_visualizer/visualizer_params.yaml"/>
-    <rosparam file="$(find spark_master_launch)/config/$(arg configuration_name)/hydra_streaming_visualizer/places_visualization_config.yaml"/>
-    <rosparam file="$(find spark_master_launch)/config/$(arg configuration_name)/hydra_streaming_visualizer/reconstruction_visualization_config.yaml"/>
+    <rosparam file="$(find spark_master_launch)/config/$(arg configuration_name)/hydra_streaming_visualizer/$(arg robot_name)/visualizer_params.yaml"/>
+    <rosparam file="$(find spark_master_launch)/config/$(arg configuration_name)/hydra_streaming_visualizer/$(arg robot_name)/places_visualization_config.yaml"/>
+    <rosparam file="$(find spark_master_launch)/config/$(arg configuration_name)/hydra_streaming_visualizer/$(arg robot_name)/reconstruction_visualization_config.yaml"/>
+    <rosparam file="$(find spark_master_launch)/config/$(arg configuration_name)/hydra_streaming_visualizer/$(arg robot_name)/visualizer.yaml" ns="config"/>
+    <rosparam file="$(find spark_master_launch)/config/$(arg configuration_name)/hydra_streaming_visualizer/$(arg robot_name)/objects_layer.yaml" ns="config/layer2"/>
+    <rosparam file="$(find spark_master_launch)/config/$(arg configuration_name)/hydra_streaming_visualizer/$(arg robot_name)/outdoor_places_layer.yaml" ns="config/layer3"/>
+    <rosparam file="$(find spark_master_launch)/config/$(arg configuration_name)/hydra_streaming_visualizer/$(arg robot_name)/rooms_layer.yaml" ns="config/layer4"/>
+    <rosparam file="$(find spark_master_launch)/config/$(arg configuration_name)/hydra_streaming_visualizer/$(arg robot_name)/buildings_layer.yaml" ns="config/layer5"/>
+    <rosparam file="$(find spark_master_launch)/config/$(arg configuration_name)/hydra_streaming_visualizer/$(arg robot_name)/agent_layer.yaml" ns="config/dynamic_layer/2"/>
 
   </node>
 

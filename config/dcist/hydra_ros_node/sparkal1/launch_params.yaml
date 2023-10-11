@@ -1,11 +1,12 @@
+---
 robot_id: 0
 odom_frame: $(arg robot_name)/odom
-robot_frame: $(arg robot_name)/base
+robot_frame: $(arg robot_name)/kimera_base
 map_frame: $(arg robot_name)/map
 exit_after_clock: false
 do_reconstruction: true
 enable_frontend_output: true
-semantic_colormap_file: $(find spark_master_launch)/config/dcist/hydra_ros_node/ade20k_mit.csv
+semantic_colormap_file: $(find spark_master_launch)/config/dcist/hydra_ros_node/$(arg robot_name)/ade20k_mit.csv
 enable_lcd: false
 log_path: $(find spark_master_launch)/output/dcist/hydra
 log_timing_incrementally: false
@@ -26,7 +27,7 @@ reconstruction:
             type: ros
             sensor_frame: $(arg robot_name)/forward_color_optical_frame
             sensor_filepath: $(find spark_master_launch)/config/dcist/hydra_ros_node/LeftCameraParams.yaml
-        camera_info_topic: forward/color/camera_info
+        camera_info_topic: $(arg robot_name)/forward/color/camera_info # TODO: move remapping to launch file
 
 frontend:
     objects:
@@ -43,11 +44,11 @@ backend:
         zmq_recv_url: tcp://$(env hydra_zmq_ip):8002
 lcd_use_bow_vectors: true
 lcd:
-    log_registration_problem:
+    log_registration_problem: false
     use_gnn_descriptors: false
 
 visualize_places: false
-places_visualizer_namespace: places_visualizer
+places_visualizer_namespace: places_visualizer # TODO: move namespace to launch file
 visualize_reconstruction: false
-reconstruction_visualizer_namespace: reconstruction_visualizer
+reconstruction_visualizer_namespace: reconstruction_visualizer # TODO: move namespace to launch file
 
