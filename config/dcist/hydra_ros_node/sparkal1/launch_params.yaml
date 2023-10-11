@@ -40,8 +40,8 @@ backend:
         optimize_on_lc: true
         enable_merge_undos: false
         use_zmq_interface: true
-        zmq_send_url: tcp://$(env hydra_zmq_ip):8001
-        zmq_recv_url: tcp://$(env hydra_zmq_ip):8002
+        zmq_send_url: tcp://$(env HYDRA_ZMQ_IP):8001
+        zmq_recv_url: tcp://$(env HYDRA_ZMQ_IP):8002
 lcd_use_bow_vectors: true
 lcd:
     log_registration_problem: false
