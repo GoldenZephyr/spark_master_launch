@@ -7,9 +7,9 @@ marker_scale: 0.2
 marker_color_mode: 0  # default
 marker_alpha: 0.9
 use_sphere_marker: true
-use_label: false
+use_label: true
 label_height: 1.0
-label_scale: 0.5
+label_scale: 0.1
 use_bounding_box: false
 bounding_box_alpha: 0.5
 collapse_bounding_box: false
