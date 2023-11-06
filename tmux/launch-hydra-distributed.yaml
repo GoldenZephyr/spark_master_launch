@@ -29,5 +29,3 @@ windows:
     - sleep 5; roslaunch kimera_core hydra_vio_jackal.launch robot_name:=$ROBOT_NAME robot_id:=$ROBOT_ID need_compressed:=false bow_skip_num:=$BOW_SKIP_NUM use_lidar_external:=false
     - sleep 5; roslaunch spark_master_launch h_dcist_single_hydra.launch robot_name:=$ROBOT_NAME
     - sleep 5; source ~/py3_autoabstr/bin/activate; cd $KIMERA_WS/src/autoabstr; ./bin/auto_abstr_server.py server
-
-

@@ -67,3 +67,5 @@ room_finder:
   dilation_diff_threshold_m: -1.0
   log_filtrations: false
   log_place_graphs: false
+places2d_config:
+    allow_places_merge: true
