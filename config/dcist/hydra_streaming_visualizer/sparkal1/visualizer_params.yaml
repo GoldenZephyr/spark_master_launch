@@ -1,4 +1,5 @@
 visualizer_ns: hydra_streaming_visualizer
+visualizer_frame: $(arg robot_name)/map
 load_graph: false
 use_zmq: false
 zmq_url: ""
