@@ -24,8 +24,8 @@ windows:
 
   panes:
     - roslaunch kimera_distributed kimera_distributed.launch robot_id:=$ROBOT_ID robot_name:=$ROBOT_NAME num_robots:=$NUM_ROBOTS dataset_name:=Jackal bow_skip_num:=$BOW_SKIP_NUM alpha:=$ALPHA
-    - sleep 5; roslaunch kimera_distributed dpgo.launch robot_id:=$ROBOT_ID robot_name:=$ROBOT_NAME num_robots:=$NUM_ROBOTS dataset_name:=Jackal multi_master:=true
-    - sleep 5; roslaunch kimera_distributed remote_topic_manager.launch robot_id:=$ROBOT_ID robot_name:=$ROBOT_NAME enet_port:=$ENET_PORT num_robots:=$NUM_ROBOTS simulate_communication:=$SIMULATE_COMM communication_schedule_file:=$COMM_PATTERN_PATH
-    - sleep 5; roslaunch kimera_core hydra_vio_jackal.launch robot_name:=$ROBOT_NAME robot_id:=$ROBOT_ID need_compressed:=false bow_skip_num:=$BOW_SKIP_NUM use_lidar_external:=false
-    - sleep 5; roslaunch spark_master_launch h_dcist_single_hydra.launch robot_name:=$ROBOT_NAME
-    - sleep 5; source ~/py3_autoabstr/bin/activate; cd $KIMERA_WS/src/autoabstr; ./bin/auto_abstr_server.py server
+    - roslaunch --wait kimera_distributed dpgo.launch robot_id:=$ROBOT_ID robot_name:=$ROBOT_NAME num_robots:=$NUM_ROBOTS dataset_name:=Jackal multi_master:=true
+    - roslaunch --wait kimera_distributed remote_topic_manager.launch robot_id:=$ROBOT_ID robot_name:=$ROBOT_NAME enet_port:=$ENET_PORT num_robots:=$NUM_ROBOTS simulate_communication:=$SIMULATE_COMM communication_schedule_file:=$COMM_PATTERN_PATH
+    - roslaunch --wait kimera_core hydra_vio_jackal.launch robot_name:=$ROBOT_NAME robot_id:=$ROBOT_ID need_compressed:=false bow_skip_num:=$BOW_SKIP_NUM use_lidar_external:=false
+    - roslaunch --wait spark_master_launch h_dcist_single_hydra.launch robot_name:=$ROBOT_NAME
+    - source ~/py3_autoabstr/bin/activate; cd $KIMERA_WS/src/autoabstr; ./bin/auto_abstr_server.py server
