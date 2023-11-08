@@ -1,0 +1,9 @@
+bow_batch_size: 100
+bow_json_file: /$(arg robot_name)_bow_vectors.json
+bow_skip_num: 1
+comm_sleep_time: 1
+load_session: false
+robot_id: $(env ROBOT_ID)
+robot_name: $(arg robot_name)
+vlc_batch_size: 10
+vlc_json_file: /$(arg robot_name)_vlc_frames.json

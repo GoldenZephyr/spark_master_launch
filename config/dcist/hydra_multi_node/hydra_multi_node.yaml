@@ -1,0 +1,124 @@
+backend:
+  add_object_merge_factors: false
+  add_place_merge_factors: true
+  building_color:
+  - 169
+  - 8
+  - 194
+  building_semantic_label: 22
+  dsg:
+    add_places_to_deformation_graph: true
+    enable_merge_undos: false
+    enable_node_merging: true
+    merge_update_dynamic: true
+    merge_update_map:
+      BUILDINGS: false
+      OBJECTS: true
+      PLACES: true
+      ROOMS: false
+    num_neighbors_to_find_for_merge: 1
+    optimize_on_lc: true
+    places_merge_distance_tolerance_m: 10.0
+    places_merge_pos_threshold_m: 0.4
+    rpgo_solver: LM
+    rpgo_verbosity: update
+    use_active_flag_for_updates: true
+    use_zmq_interface: true
+    zmq_recv_url: tcp://127.0.0.1:8002
+    zmq_send_url: tcp://127.0.0.1:8001
+  enable_rooms: true
+  initial_align:
+    alignment_gnc_alpha: 0.7
+    alignment_min_inliers: 5
+    alignment_set_weights: false
+    rot_sigma: 0.1
+    trans_sigma: 100.0
+    transform_change_tol: 10.0
+  initial_alignment: true
+  min_initial_align_reset_delta: 1.0
+  min_valid_obj_merge_ratio: 0.5
+  min_valid_place_merges_ratio: 0.5
+  pgmo:
+    add_initial_prior: false
+    covariance:
+      loop_close: 0.1
+      mesh_mesh: 1.0
+      object_merge: 0.001
+      odom: 0.1
+      place_edge: 1.0
+      place_merge: 0.01
+      place_mesh: 0.01
+      pose_mesh: 1.0
+      prior: 0.001
+      sg_loop_close: 0.1
+    embed_trajectory_delta_t: 5.0
+    enable_sparsify: true
+    interp_horizon: 10.0
+    num_interp_pts: 3
+    rot_node_dist: 1.2
+    rpgo:
+      gnc_alpha: 0.999999
+      gnc_cost_tolerance: 1.0e-05
+      gnc_fix_prev_inliers: true
+      gnc_max_iterations: 100
+      gnc_mu_step: 1.6
+      gnc_weight_tolerance: 0.0001
+      lm_diagonal_damping: true
+      odom_rot_threshold: -1
+      odom_trans_threshold: -1
+      pcm_rot_threshold: -1
+      pcm_trans_threshold: -1
+      solver: LM
+      verbosity: UPDATE
+    run_mode: 0
+    trans_node_dist: 1.0
+    use_msg_time: true
+  places2d_config:
+    allow_places_merge: true
+  reconcile_objects: true
+  reconcile_places: true
+  room_finder:
+    clip_dilation_window_to_max: false
+    clustering_mode: NEIGHBORS
+    dilation_diff_threshold_m: -1.0
+    dilation_threshold_mode: PLATEAU
+    log_filtrations: false
+    log_place_graphs: false
+    max_dilation_m: 1.2
+    max_modularity_iters: 5
+    min_component_size: 10
+    min_dilation_m: 0.5
+    min_lifetime_length_m: 0.1
+    min_room_size: 10
+    min_window_size: 0.2
+    modularity_gamma: 1.0
+    plateau_ratio: 0.15
+    room_prefix: R
+  type: MultiBackendModule
+  use_2d_places: true
+  visualize_place_factors: false
+frontend:
+  type: MultiRosFrontend
+  use_dsg_lcd: false
+lcd:
+  gnn_lcd:
+    object_model_path: $(find hydra)/models/lcd/object_gnn.onnx
+    places_model_path: $(find hydra)/models/lcd/place_gnn.onnx
+  use_gnn_descriptors: false
+lcd_use_bow_vectors: true
+log_path: $(env HYDRA_LOGS)/hydra
+log_timing_incrementally: false
+map_frame: world
+pgmo:
+  posegraph_viewer:
+    frame_id: world
+robot_names:
+  - acl_jackal
+  - acl_jackal2
+  - sparkal1
+  - sparkal2
+  - acl_jackal_prev
+  - acl_jackal2_prev
+  - sparkal1_prev
+  - sparkal2_prev
+

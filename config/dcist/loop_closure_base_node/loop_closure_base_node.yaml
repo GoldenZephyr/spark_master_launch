@@ -1,0 +1,34 @@
+alpha: 0.3
+bow_batch_size: 100
+bow_skip_num: 1
+comm_sleep_time: 1.0
+detect_interrobot_only: true
+dist_local: 1
+geometric_verification_min_inlier_count: 5
+geometric_verification_min_inlier_percentage: 0.1
+log_output_path: $(env HYDRA_LOGS)
+lowe_ratio: 0.8
+max_db_results: 2
+max_intraisland_gap: 3
+max_nrFrames_between_islands: 3
+max_nrFrames_between_queries: 2
+max_ransac_iterations: 1000
+max_ransac_iterations_mono: 1000
+min_matches_per_island: 1
+min_nss_factor: 0.05
+min_temporal_matches: 5
+num_robots: 8
+ransac_inlier_percentage_mono: 0.01
+ransac_threshold: 0.3
+ransac_threshold_mono: 1.0e-05
+robot0_name: acl_jackal
+robot1_name: acl_jackal2
+robot2_name: sparkal1
+robot3_name: sparkal2
+robot4_name: acl_jackal_prev
+robot5_name: acl_jackal2_prev
+robot6_name: sparkal1_prev
+robot7_name: sparkal2_prev
+vlc_batch_size: 10
+vocabulary_path: $(find kimera_multi_lcd)/vocab/mit_voc.yml
+

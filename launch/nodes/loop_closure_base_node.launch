@@ -1,0 +1,22 @@
+<launch>
+
+    <arg name="node_name"/>
+    <arg name="required"/>
+    <arg name="configuration_name"/>
+    <arg name="output"/>
+
+    <node pkg="hydra_ros" type="hydra_ros_node"
+          name="$(arg node_name)"
+          launch-prefix="$(arg launch_prefix)"
+          args="--minloglevel=$(arg min_glog_level) -v=$(arg verbosity) $(arg glog_file_args)"
+          required="$(arg required)"
+          output="$(arg output)">
+
+    <node name="$(arg node_name)" pkg="kimera_centralized_pgmo"
+          type="loop_closure_base_node"
+          output="$(arg output)">
+
+        <rosparam file="$(find spark_master_launch)/config/$(arg configuration_name)/loop_closure_base_node/loop_closure_base_node.yaml" subst_value="true"/>
+    </node>
+
+</launch>

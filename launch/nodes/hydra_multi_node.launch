@@ -1,0 +1,28 @@
+<launch>
+
+    <arg name="node_name"/>
+    <arg name="required"/>
+    <arg name="configuration_name"/>
+    <arg name="output"/>
+    <arg name="min_glog_level" default="0"/>
+    <arg name="verbosity" default="0"/>
+
+    <arg name="gdb_debug" default="false"/>
+    <arg name="launch_prefix" value="gdb -ex run --args" if="$(arg gdb_debug)"/>
+    <arg name="launch_prefix" value="" unless="$(arg gdb_debug)"/>
+    <arg name="glog_to_file" default="$(eval output == log)"/>
+    <arg name="glog_file_args" default="--logtostderr=0 --log_dir=$(find spark_master_launch)/output/dcist/hydra" if="$(arg glog_to_file)"/>
+    <arg name="glog_file_args" default="" unless="$(arg glog_to_file)"/>
+
+    <node pkg="hydra_multi_ros" type="hydra_multi_node"
+          name="$(arg node_name)"
+          launch-prefix="$(arg launch_prefix)"
+          args="--minloglevel=$(arg min_glog_level) -v=$(arg verbosity) $(arg glog_file_args)"
+          required="$(arg required)"
+          output="$(arg output)">
+
+        <rosparam file="$(find spark_master_launch)/config/$(arg configuration_name)/hydra_multi_node/hydra_multi_node.yaml" subst_value="true"/>
+    </node>
+
+</launch>
+

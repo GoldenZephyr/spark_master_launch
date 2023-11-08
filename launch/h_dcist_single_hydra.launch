@@ -1,7 +1,6 @@
 <launch> 
     <arg name="robot_name" default="sparkal1"/>
-    <include file="$(find spark_master_launch)/launch/dcist_master.launch" ns="$(arg robot_name)">
-            <arg name="sim_time_required" value="false"/>
+    <include file="$(find spark_master_launch)/launch/dcist_master.launch">
 
             <arg name="robot_name" value="sparkal1"/>
             <arg name="launch_hydra_ros" value="true"/>

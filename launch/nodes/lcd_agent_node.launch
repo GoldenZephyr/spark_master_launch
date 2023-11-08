@@ -1,0 +1,15 @@
+<launch>
+
+    <arg name="robot_name"/>
+    <arg name="node_name"/>
+    <arg name="required"/>
+    <arg name="configuration_name"/>
+    <arg name="output"/>
+
+    <node name="$(arg node_name)" pkg="kimera_centralized_pgmo" type="loop_closure_agent_node" output="$(arg output)">
+        <rosparam file="$(find spark_master_launch)/config/$(arg configuration_name)/lcd_agent_node/$(arg robot_name)/lcd_agent_node.yaml" subst_value="true"/>
+    </node>
+
+</launch>
+
+
