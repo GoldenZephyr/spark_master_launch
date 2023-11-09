@@ -26,20 +26,18 @@ windows:
     - source $KIMERA_WS/devel/setup.zsh
 
   panes:
-    #- roslaunch hydra_multi_ros hydra_multi_dcist.launch enable_dsg_lcd:=false start_visualizer:=true start_rviz:=false output_dir:=$HYDRA_LOGS/$RUN_NAME num_robots:=8
-    - roslaunch spark_master_launch dcist_master.launch launch_hydra_multi_node:=true launch_loop_closure_base_node:=true robot_name:=$ROBOT_NAME
+    - roslaunch spark_master_launch dcist_master.launch launch_hydra_multi_node:=true robot_name:=$ROBOT_NAME
+    - roslaunch --wait spark_master_launch dcist_master.launch launch_loop_closure_base_node:=true robot_name:=$ROBOT_NAME
 
-    #- roslaunch --wait hydra_multi_ros lc_module_robot.launch robot_id:=$PREV_ID robot_name:=$ROBOT_PREV save_lcd_frames:=false output_dir:=$OUTPUT_PATH/$ROBOT_PREV load_visual_lc_session:=true visual_lc_session_dir:=$INPUT_PATH/$ROBOT_PREV
-    - roslaunch --wait spark_master_launch dcist_master.launch launch_lcd_agent_prev:=true robot_name:=$ROBOT_NAME
+    - roslaunch --wait spark_master_launch dcist_master.launch launch_lcd_agent:=true robot_name:=$ROBOT_PREV
 
     - sleep 5; rosrun hydra_multi_ros load_srv.py /hydra_multi_node/load $PREV_ID $INPUT_PATH/$ROBOT_PREV/hydra
 
-    #- roslaunch --wait hydra_multi_ros lc_module_robot.launch robot_id:=$ROBOT_ID robot_name:=$ROBOT_NAME save_lcd_frames:=false output_dir:=$HYDRA_LOGS/$RUN_NAME/$ROBOT_NAME
     - roslaunch --wait spark_master_launch dcist_master.launch launch_lcd_agent:=true robot_name:=$ROBOT_NAME
 
-    #- roslaunch --wait kimera_core hydra_vio_jackal.launch robot_name:=$ROBOT_NAME robot_id:=$ROBOT_ID need_compressed:=false bow_skip_num:=$BOW_SKIP_NUM use_lidar_external:=false base_tf:=true
     - roslaunch --wait spark_master_launch dcist_master.launch launch_kimera_vio_ros_node:=true robot_name:=$ROBOT_NAME
 
     - roslaunch --wait spark_master_launch h_dcist_single_hydra.launch robot_name:=$ROBOT_NAME
-    #- source ~/py3_autoabstr/bin/activate; cd $KIMERA_WS/src/autoabstr; ./bin/auto_abstr_server.py server
+
+    - source ~/py3_autoabstr/bin/activate; cd $KIMERA_WS/src/autoabstr; ./bin/auto_abstr_server.py server -r tcp://$HYDRA_ZMQ_IP:8001 -s tcp://$HYDRA_ZMQ_IP:8003
 
