@@ -22,6 +22,7 @@
           output="$(arg output)">
 
         <rosparam file="$(find spark_master_launch)/config/$(arg configuration_name)/hydra_multi_node/hydra_multi_node.yaml" subst_value="true"/>
+
     </node>
 
 </launch>

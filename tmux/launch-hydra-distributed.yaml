@@ -26,7 +26,8 @@ windows:
     - source $KIMERA_WS/devel/setup.zsh
 
   panes:
-    - roslaunch hydra_multi_ros hydra_multi_dcist.launch enable_dsg_lcd:=false start_visualizer:=true start_rviz:=false output_dir:=$HYDRA_LOGS/$RUN_NAME num_robots:=8
+    #- roslaunch hydra_multi_ros hydra_multi_dcist.launch enable_dsg_lcd:=false start_visualizer:=true start_rviz:=false output_dir:=$HYDRA_LOGS/$RUN_NAME num_robots:=8
+    - roslaunch spark_master_launch dcist_master.launch launch_hydra_multi_node:=true launch_loop_closure_base_node:=true robot_name:=$ROBOT_NAME
 
     #- roslaunch --wait hydra_multi_ros lc_module_robot.launch robot_id:=$PREV_ID robot_name:=$ROBOT_PREV save_lcd_frames:=false output_dir:=$OUTPUT_PATH/$ROBOT_PREV load_visual_lc_session:=true visual_lc_session_dir:=$INPUT_PATH/$ROBOT_PREV
     - roslaunch --wait spark_master_launch dcist_master.launch launch_lcd_agent_prev:=true robot_name:=$ROBOT_NAME

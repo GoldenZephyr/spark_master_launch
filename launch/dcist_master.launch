@@ -19,9 +19,11 @@
     <arg name="start_pose_graph_viewer" default="false"/>
     <arg name="launch_forward_static_tf" default="false" />
     <arg name="launch_base_static_tf" default="false"/>
-    <arg name="launch_kimera_vio_ros" default="false"/>
+    <arg name="launch_kimera_vio_ros_node" default="false"/>
     <arg name="launch_lcd_agent" default="false"/>
     <arg name="launch_lcd_agent_prev" default="false"/>
+    <arg name="launch_hydra_multi_node" default="false"/>
+    <arg name="launch_loop_closure_base_node" default="false"/>
 
     <arg name="sim_time_required" default="false"/>
     <param name="use_sim_time" value="$(arg sim_time_required)"/>
@@ -178,7 +180,7 @@
         </include>
     </group>
 
-    <group if="$(arg launch_kimera_vio_ros)">
+    <group if="$(arg launch_kimera_vio_ros_node)">
         <remap from="left_cam/image_raw" to="forward/color/image_raw"/>
         <remap from="depth_cam/image_raw" to="forward/depth/image_rect_raw"/>
         <remap from="imu" to="forward/imu"/>
@@ -211,8 +213,8 @@
 
     <!-- lcd agent -->
     <group if="$(arg launch_lcd_agent)">
-        <remap from="vlc_requests" to="/lcd_base/vlc_requests"/>
-        <remap from="bow_requests" to="/lcd_base/bow_requests"/>
+        <remap from="vlc_requests" to="/loop_closure_base_node/vlc_requests"/>
+        <remap from="bow_requests" to="/loop_closure_base_node/bow_requests"/>
         <remap from="/$(arg robot_name)/kimera_vio_ros/bow_query" to="kimera_vio_ros_node/bow_query"/>
         <remap from="/$(arg robot_name)/kimera_vio_ros/vlc_frames" to="kimera_vio_ros_node/vlc_frames"/>
         <include file="$(find spark_master_launch)/launch/nodes/lcd_agent_node.launch">
@@ -229,8 +231,8 @@
 
     <!-- lcd agent prev -->
     <group if="$(arg launch_lcd_agent_prev)" ns="$(arg robot_name)_prev">
-        <remap from="vlc_requests" to="/lcd_base/vlc_requests"/>
-        <remap from="bow_requests" to="/lcd_base/bow_requests"/>
+        <remap from="vlc_requests" to="/loop_closure_base_node/vlc_requests"/>
+        <remap from="bow_requests" to="/loop_closure_base_node/bow_requests"/>
         <remap from="/$(arg robot_name)_prev/kimera_vio_ros/bow_query" to="kimera_vio_ros_node/bow_query"/>
         <remap from="/$(arg robot_name)_prev/kimera_vio_ros/vlc_frames" to="kimera_vio_ros_node/vlc_frames"/>
         <include file="$(find spark_master_launch)/launch/nodes/lcd_agent_node.launch">
@@ -243,8 +245,79 @@
     </group>
 
     <group if="$(arg launch_hydra_multi_node)">
+
+        <remap from="~loop_closures" to="loop_closure_base_node/loop_closures"/>
+
+        <!-- These assignments have to match the order in params `hydra_multi_node.yaml` -->
+        <arg name="robot0_name" value="acl_jackal"/>
+        <arg name="robot1_name" value="acl_jackal2"/>
+        <arg name="robot2_name" value="sparkal1"/>
+        <arg name="robot3_name" value="sparkal2"/>
+        <arg name="robot4_name" value="acl_jackal_prev"/>
+        <arg name="robot5_name" value="acl_jackal2_prev"/>
+        <arg name="robot6_name" value="sparkal1_prev"/>
+        <arg name="robot7_name" value="sparkal2_prev"/>
+
+        <remap from="~robot0/dsg" to="$(arg robot0_name)/hydra_ros_node/frontend/dsg"/>
+        <remap from="~robot0/full_mesh_update" to="$(arg robot0_name)/hydra_ros_node/frontend/full_mesh_update"/>
+        <remap from="~robot0/mesh_graph_incremental" to="$(arg robot0_name)/hydra_ros_node/frontend/mesh_graph_incremental"/>
+        <remap from="~robot0/pose_graph_incremental" to="$(arg robot0_name)/kimera_vio_ros_node/pose_graph_incremental"/>
+
+        <remap from="~robot1/dsg" to="$(arg robot1_name)/hydra_ros_node/frontend/dsg"/>
+        <remap from="~robot1/full_mesh_update" to="$(arg robot1_name)/hydra_ros_node/frontend/full_mesh_update"/>
+        <remap from="~robot1/mesh_graph_incremental" to="$(arg robot1_name)/hydra_ros_node/frontend/mesh_graph_incremental"/>
+        <remap from="~robot1/pose_graph_incremental" to="$(arg robot1_name)/kimera_vio_ros_node/pose_graph_incremental"/>
+
+        <remap from="~robot2/dsg" to="$(arg robot2_name)/hydra_ros_node/frontend/dsg"/>
+        <remap from="~robot2/full_mesh_update" to="$(arg robot2_name)/hydra_ros_node/frontend/full_mesh_update"/>
+        <remap from="~robot2/mesh_graph_incremental" to="$(arg robot2_name)/hydra_ros_node/frontend/mesh_graph_incremental"/>
+        <remap from="~robot2/pose_graph_incremental" to="$(arg robot2_name)/kimera_vio_ros_node/pose_graph_incremental"/>
+
+        <remap from="~robot3/dsg" to="$(arg robot3_name)/hydra_ros_node/frontend/dsg"/>
+        <remap from="~robot3/full_mesh_update" to="$(arg robot3_name)/hydra_ros_node/frontend/full_mesh_update"/>
+        <remap from="~robot3/mesh_graph_incremental" to="$(arg robot3_name)/hydra_ros_node/frontend/mesh_graph_incremental"/>
+        <remap from="~robot3/pose_graph_incremental" to="$(arg robot3_name)/kimera_vio_ros_node/pose_graph_incremental"/>
+
+        <remap from="~robot4/dsg" to="$(arg robot4_name)/hydra_ros_node/frontend/dsg"/>
+        <remap from="~robot4/full_mesh_update" to="$(arg robot4_name)/hydra_ros_node/frontend/full_mesh_update"/>
+        <remap from="~robot4/mesh_graph_incremental" to="$(arg robot4_name)/hydra_ros_node/frontend/mesh_graph_incremental"/>
+        <remap from="~robot4/pose_graph_incremental" to="$(arg robot4_name)/kimera_vio_ros_node/pose_graph_incremental"/>
+
+        <remap from="~robot5/dsg" to="$(arg robot5_name)/hydra_ros_node/frontend/dsg"/>
+        <remap from="~robot5/full_mesh_update" to="$(arg robot5_name)/hydra_ros_node/frontend/full_mesh_update"/>
+        <remap from="~robot5/mesh_graph_incremental" to="$(arg robot5_name)/hydra_ros_node/frontend/mesh_graph_incremental"/>
+        <remap from="~robot5/pose_graph_incremental" to="$(arg robot5_name)/kimera_vio_ros_node/pose_graph_incremental"/>
+
+        <remap from="~robot6/dsg" to="$(arg robot6_name)/hydra_ros_node/frontend/dsg"/>
+        <remap from="~robot6/full_mesh_update" to="$(arg robot6_name)/hydra_ros_node/frontend/full_mesh_update"/>
+        <remap from="~robot6/mesh_graph_incremental" to="$(arg robot6_name)/hydra_ros_node/frontend/mesh_graph_incremental"/>
+        <remap from="~robot6/pose_graph_incremental" to="$(arg robot6_name)/kimera_vio_ros_node/pose_graph_incremental"/>
+
+        <remap from="~robot7/dsg" to="$(arg robot7_name)/hydra_ros_node/frontend/dsg"/>
+        <remap from="~robot7/full_mesh_update" to="$(arg robot7_name)/hydra_ros_node/frontend/full_mesh_update"/>
+        <remap from="~robot7/mesh_graph_incremental" to="$(arg robot7_name)/hydra_ros_node/frontend/mesh_graph_incremental"/>
+        <remap from="~robot7/pose_graph_incremental" to="$(arg robot7_name)/kimera_vio_ros_node/pose_graph_incremental"/>
+
         <include file="$(find spark_master_launch)/launch/nodes/hydra_multi_node.launch">
             <arg name="node_name" value="hydra_multi_node"/>
+            <arg name="required" value="true"/>
+            <arg name="configuration_name" value="dcist"/>
+            <arg name="output" value="$(arg output)"/>
+        </include>
+    </group>
+
+    <group if="$(arg launch_loop_closure_base_node)">
+        <remap from="~robot0/bow_query" to="/acl_jackal/kimera_vio_ros_node/bow_query"/>
+        <remap from="~robot1/bow_query" to="/acl_jackal2/kimera_vio_ros_node/bow_query"/>
+        <remap from="~robot2/bow_query" to="/sparkal1/kimera_vio_ros_node/bow_query"/>
+        <remap from="~robot3/bow_query" to="/sparkal2/kimera_vio_ros_node/bow_query"/>
+        <remap from="~robot4/bow_query" to="/acl_jackal_prev/kimera_vio_ros_node/bow_query"/>
+        <remap from="~robot5/bow_query" to="/acl_jackal2_prev/kimera_vio_ros_node/bow_query"/>
+        <remap from="~robot6/bow_query" to="/sparkal1_prev/kimera_vio_ros_node/bow_query"/>
+        <remap from="~robot7/bow_query" to="/sparkal2_prev/kimera_vio_ros_node/bow_query"/>
+
+        <include file="$(find spark_master_launch)/launch/nodes/loop_closure_base_node.launch">
+            <arg name="node_name" value="loop_closure_base_node"/>
             <arg name="required" value="true"/>
             <arg name="configuration_name" value="dcist"/>
             <arg name="output" value="$(arg output)"/>
