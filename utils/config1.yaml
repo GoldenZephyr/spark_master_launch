@@ -1,0 +1,16 @@
+---
+tag0: whale
+tag1: cat
+tag2:
+    - dog
+    - rhino
+    - bear
+tag3:
+    tag4: 1
+    tag5: 2
+
+tag8: hippo
+
+tag11:
+    - tag12: a
+    - tag13: b

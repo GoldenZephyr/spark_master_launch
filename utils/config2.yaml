@@ -1,0 +1,12 @@
+---
+tag1: cat
+tag2:
+    - walrus
+    - rhino
+    - bear
+tag3:
+    tag4: 1
+    tag5: 2
+    tag6: 3
+
+tag8: unicorn
