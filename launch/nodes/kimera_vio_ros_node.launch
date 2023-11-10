@@ -10,7 +10,7 @@
   <node name="kimera_vio_ros_node" pkg="kimera_vio_ros" type="kimera_vio_ros_node"
         output="$(arg output)" 
         required="$(arg required)"
-        args="--vocabulary_path=$(find kimera_vio)/vocabulary/ORBvoc.yml
+        args="--vocabulary_path=$(find kimera_multi_lcd)/vocab/mit_voc.yml
               --output_path=$(find spark_master_launch)/output/$(arg configuration_name)/$(arg node_name)/$(arg robot_name)
               --flagfile=$(find spark_master_launch)/config/$(arg configuration_name)/$(arg node_name)/$(arg robot_name)/Pipeline.flags
               --flagfile=$(find spark_master_launch)/config/$(arg configuration_name)/$(arg node_name)/$(arg robot_name)/Mesher.flags

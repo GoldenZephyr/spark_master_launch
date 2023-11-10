@@ -1,8 +1,8 @@
 visualizer_ns: hydra_streaming_visualizer
 visualizer_frame: $(arg robot_name)/map
 load_graph: false
-use_zmq: false
-zmq_url: ""
+use_zmq: true
+zmq_url: "tcp://$(env HYDRA_ZMQ_IP):8003"
 dsg_mesh:
     label_colormap: $(find spark_master_launch)/config/$(arg configuration_name)/hydra_streaming_visualizer/$(arg robot_name)/ade20k_mit.csv
     color_by_label: false
