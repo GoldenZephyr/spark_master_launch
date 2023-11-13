@@ -1,50 +1,51 @@
+#!/usr/bin/env python
 import yaml
 import os
 import sys
+import subprocess
+import argparse
+
+
+def load_file(file_name):
+    try:
+        with open(file_name, 'r') as fo:
+            content = fo.read()
+            return yaml.load(content, Loader=yaml.Loader)
+    except FileNotFoundError:
+        return None
+
+def get_git_show_output(file_reference, verbose=True):
+    # Construct the git show command with the input commit hash
+    command = ['git', 'show', file_reference]
+    if verbose:
+        print("Loading file from git: ", file_reference)
+    try:
+        # Run the command and capture the output
+        result = subprocess.check_output(command, universal_newlines=True)
+
+        # Return the output
+        return yaml.load(result, Loader=yaml.Loader)
+    except subprocess.CalledProcessError as e:
+        # Handle errors, if any
+        print(f"Error: {e}")
+        return None
+
 
 atoms = [str, int, float]
-
-args = sys.argv
-
-if len(args) != 3:
-    print("Usage: yamldiff.py <old config yaml> <new config yaml>")
-    exit(1)
-
-fn_a = args[1]
-fn_b = args[2]
-
-with open(fn_a, "r") as fo:
-    y1 = yaml.load(fo,Loader=yaml.Loader)
-with open("/tmp/yaml_old.yaml", "w") as fo:
-    fo.write(yaml.dump(y1))
-
-with open(fn_b, "r") as fo:
-    y2 = yaml.load(fo,Loader=yaml.Loader)
-with open("/tmp/yaml_new.yaml", "w") as fo:
-    fo.write(yaml.dump(y2))
-
-print("")
-print(fn_a + " " * max((40 - len(fn_a)),1) + fn_b)
-print("-"*80)
-os.system("diff -y --suppress-common-lines --color %s %s" % ("/tmp/yaml_old.yaml", "/tmp/yaml_new.yaml"))
-
 
 def diff(a, b):
     if a == b:
         # no difference in this subtree
-        return ()
+        return None
     elif type(a) == type(b):
         # iterate though a/b to find where the difference is
         if type(a) in atoms:
-            print("found atoms:", a, b)
             return a, b
         else:
-            print("found composites:", a, b)
             return iterate_diff(a, b)
     else:
         # if the type of a and b are different, all descendents are a diff
         return a, b # old, new
-
 
 def iterate_diff(a, b):
     # Precondition: a,b are same type (list or dict)
@@ -52,113 +53,93 @@ def iterate_diff(a, b):
     if type(a) == list:
         # TODO: compute optimal alignment
         N = max(len(a), len(b))
-        diffs = ()
+        diffsa = []
+        diffsb = []
         for ix in range(N):
             if ix < len(a) and ix < len(b):
-                diffs += (diff(a[ix], b[ix]),)
+                d = diff(a[ix], b[ix])
+                if d is not None:
+                    diffsa.append(d[0])
+                    diffsb.append(d[1])
             elif ix < len(a):
-                diffs += ((a, None),)
+                diffsa.append(a[ix])
             else:
-                diffs += ((None, b),)
-        return diffs
+                diffsb.append(b[ix])
+        return diffsa, diffsb
 
     elif type(a) == dict:
-        diffs = {}
+        diffsa = {}
+        diffsb = {}
         for k in set(a.keys()).union(set(b.keys())):
             if k in a.keys() and k in b.keys():
-                diffs[k] = diff(a[k], b[k])
+                d = diff(a[k], b[k])
+                if d is not None:
+                    diffsa[k] = d[0]
+                    diffsb[k] = d[1]
             elif k in a.keys():
                 # key in a and not b
-                diffs[k] = (a[k], None)
+                diffsa[k] = a[k]
             else:
                 # key in b and not a
-                diffs[k] = (None, b[k])
+                diffsb[k] = b[k]
 
-        return diffs
-#
-#def yaml_to_lines(snip):
-#    yml = yaml.dump(snip).split('\n')
-#    return [y for y in yml if len(y) > 0]
-#
-#def get_diff_string(d, diff_idx):
-#    if type(d) == tuple:
-#        if d == ():
-#            # no diff
-#            return None, None
-#
-#        if (d[diff_idx] is None):
-#            return None, None
-#
-#        if diff_idx == 0 and d[1] is None:
-#            if type(d[0]) in atoms:
-#                lines = [str(d[0])]
-#            else:
-#                lines = yaml_to_lines(d[0])
-#            prefixes = ['DEL']*len(lines)
-#            return prefixes, lines
-#
-#        if diff_idx == 1 and d[0] is None:
-#            if type(d[1]) in atoms:
-#                lines = [str(d[1])]
-#            else:
-#                lines = yaml_to_lines(d[1])
-#            prefixes = ['ADD']*len(lines)
-#            return prefixes, lines
-#
-#        if type(d[0]) != type(d[1]):
-#            lines = yaml_to_lines(d[diff_idx])
-#            if diff_idx == 0:
-#                prefixes = ["OLD"]*len(lines)
-#            else:
-#                prefixes = ["NEW"]*len(lines)
-#            return prefixes, lines
-#
-#        if len(d) == 2 and (type(d[0]) in atoms or type(d[1]) in atoms):
-#            return [["OLD", "NEW"][diff_idx]], [d[diff_idx]]
-#
-#        pfx = []
-#        lines = []
-#        for t in d:
-#            p,l = get_diff_string(t, diff_idx)
-#            if p is None:
-#                continue
-#            pfx += p
-#            lines += ["  " + line for line in l]
-#        return pfx, lines
-#
-#    elif type(d) == dict:
-#        pfx = []
-#        lines = []
-#        for k,v in d.items():
-#            if v == ():
-#                continue
-#
-#            p, l = get_diff_string(v, diff_idx)
-#            if p is None:
-#                continue
-#            pfx.append("   ")
-#            lines.append(k + ":")
-#            pfx += p
-#            lines += ["  " + line for line in l]
-#
-#        return pfx, lines
-#
-#    #elif type(d) == list:
-#    #    pass
-#
-#def print_diff(d):
-#    p1, l1 = get_diff_string(d, 0)
-#    for p,l in zip(p1,l1):
-#        print(p + "  " + l)
-#    p2, l2 = get_diff_string(d, 1)
-#    print('====')
-#    for p,l in zip(p2,l2):
-#        print(p + "  " + l)
+        return diffsa, diffsb
+
+def get_yaml_lines(y):
+    lines = []
+    if type(y) == dict:
+        for k in sorted(y.keys()):
+            if y[k] == {}:
+                continue
+            lines.append(f"{k}:")
+            children = get_yaml_lines(y[k])
+            lines += ["  " + l for l in children]
+        return lines
+    if type(y) == list:
+        for e in y:
+            child_lines = get_yaml_lines(e)
+            if len(child_lines) > 0:
+                lines += ["  - " + child_lines[0]]
+                lines += ["    " + cl for cl in child_lines[1:]]
+        return lines
+    if y is None:
+        return []
+    # atom
+    return [str(y)]
+
+
+# Setup argparse to handle command-line arguments
+parser = argparse.ArgumentParser(description='Process two files or files at commit hash (i.e. <HASH>:path/relative/to/git/base/dir')
+parser.add_argument('file1', help='First file name or git-relative path at hash')
+parser.add_argument('file2', help='Second file name or git-relative path at hash')
+
+args = parser.parse_args()
+
+y1 = load_file(args.file1) or get_git_show_output(args.file1)
+y2 = load_file(args.file2) or get_git_show_output(args.file2)
+
+# Do something with the loaded content
+if y1 is None:
+    print(f"Could not load file1: {args.file1}")
+
+if y2 is None:
+    print(f"Could not load file2: {args.file2}")
+
+if y1 is None or y2 is None:
+    exit(0)
 
 out = diff(y1, y2)
-print(out)
-#print_diff(out)
+if out is None:
+    print("No diff")
+    exit(1)
+with open("/tmp/yaml_old.yaml", "w") as fo:
+    for l in get_yaml_lines(out[0]):
+        fo.write(l + "\n")
+with open("/tmp/yaml_new.yaml", "w") as fo:
+    for l in get_yaml_lines(out[1]):
+        fo.write(l + "\n")
 
-
-
-
+print("")
+print(args.file1 + " " * max((40 - len(args.file1)),1) + args.file2)
+print("-"*80)
+os.system("diff -y -d --color %s %s" % ("/tmp/yaml_old.yaml", "/tmp/yaml_new.yaml"))
