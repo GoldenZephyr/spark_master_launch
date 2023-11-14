@@ -1,0 +1,24 @@
+---
+base_link_frame_id: $(arg robot_name)/kimera_base
+bow_batch_size: 10
+bow_skip_num: 1
+force_same_image_timestamp: true
+image_transport: raw
+left_cam_frame_id: $(arg robot_name)/kimera_left_cam
+log_gt_data: false
+map_frame_id: $(arg robot_name)/map
+mono_ransac_threshold: 30
+odom_frame_id: $(arg robot_name)/odom
+online_run: true
+params_folder_path: $(find hydra_vio_configs)/config/jackal/
+position_det_threshold: 0.3
+publish_vlc_frames: true
+right_cam_frame_id: $(arg robot_name)/kimera_right_cam
+robot_id: 2
+sensor_params_folder_path: $(find hydra_vio_configs)/config/robots/$(arg robot_name)/
+stereo_ransac_threshold: 20
+use_external_odom: true
+use_lcd: true
+use_lcd_registration_server: false
+use_rviz: true
+velocity_det_threshold: 0.1

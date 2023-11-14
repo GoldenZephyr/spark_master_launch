@@ -1,0 +1,17 @@
+--use_lcd=true
+--use_external_odometry=true
+--do_coarse_imu_camera_temporal_sync=false
+--do_fine_imu_camera_temporal_sync=false
+--lcd_no_optimize=true
+--lcd_no_detection=false
+--depth_image_mask=""
+--colorlogtostderr=1
+--log_prefix=1
+--minloglevel=0
+--log_output=true
+--log_euroc_gt_data=true
+--lcd_disable_stereo_match_depth_check=true
+--no_incremental_pose=true
+--viz_type=1
+--visualize=true
+

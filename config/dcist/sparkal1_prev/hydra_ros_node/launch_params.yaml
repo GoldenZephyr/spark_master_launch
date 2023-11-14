@@ -1,0 +1,54 @@
+---
+robot_id: 0
+odom_frame: $(arg robot_name)/odom
+robot_frame: $(arg robot_name)/kimera_base
+map_frame: $(arg robot_name)/map
+exit_after_clock: false
+do_reconstruction: true
+enable_frontend_output: true
+semantic_colormap_file: $(find spark_master_launch)/config/dcist/hydra_ros_node/$(arg robot_name)/ade20k_mit.csv
+enable_lcd: false
+log_path: $(find spark_master_launch)/output/dcist/hydra
+log_timing_incrementally: false
+rgb:
+    image_transport: compressed
+reconstruction:
+    pose_graphs:
+        make_pose_graph: true
+    use_image_receiver: false
+    image_queue_size: 10
+    publish_pointcloud: false
+    copy_dense_representations: false
+    sensor:
+        type: camera_info
+        min_range: 0.1
+        max_range: 5.0
+        extrinsics:
+            type: kimera
+            sensor_frame: $(arg robot_name)/forward_color_optical_frame
+            sensor_filepath: $(find spark_master_launch)/config/dcist/hydra_ros_node/sparkal1/LeftCameraParams.yaml
+        camera_info_topic: /$(arg robot_name)/forward/color/camera_info # TODO: move remapping to launch file
+
+frontend:
+    objects:
+        bounding_box_type: RAABB
+    validate_vertices: false
+    use_outdoor_places: true
+
+backend:
+    dsg:
+        optimize_on_lc: true
+        enable_merge_undos: false
+        use_zmq_interface: true
+        zmq_send_url: tcp://$(env HYDRA_ZMQ_IP):8001
+        zmq_recv_url: tcp://$(env HYDRA_ZMQ_IP):8002
+lcd_use_bow_vectors: true
+lcd:
+    log_registration_problem: false
+    use_gnn_descriptors: false
+
+visualize_places: false
+places_visualizer_namespace: places_visualizer # TODO: move namespace to launch file
+visualize_reconstruction: false
+reconstruction_visualizer_namespace: reconstruction_visualizer # TODO: move namespace to launch file
+

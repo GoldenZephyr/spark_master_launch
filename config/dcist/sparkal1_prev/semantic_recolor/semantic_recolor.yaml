@@ -1,0 +1,3 @@
+image_separate_s: 0.0
+model_file: $(find semantic_recolor)/models/mobilenetv2_360_640.onnx
+engine_file: $(find semantic_recolor)/engines/mobilenetv2_360_640.trt
